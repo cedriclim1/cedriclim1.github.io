@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>How I structure a PhD-scale data pipeline — Cedric Lim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<script src="chrome.js"></script>
+</head>
+<body>
+<div id="site-header-slot"></div>
+
+<main class="wrap">
+  <article class="post">
+    <a class="back-link" href="writing.html">← All writing</a>
+    <h1>How I structure a PhD-scale data pipeline</h1>
+    <div class="post-meta">
+      <span>March 14, 2026</span>
+      <span>·</span>
+      <span>8 min read</span>
+      <span>·</span>
+      <span>Workflow</span>
+    </div>
+
+    <p>Three years into my PhD, I've finally landed on a data setup that survives both reviewer #2 and the 2 a.m. cluster crash. Like most things in research, it's the third or fourth iteration, and the first two were embarrassingly bad. I'm writing this down partly so I don't forget, and partly so the next first-year in my group has something better to inherit than a Slack DM that says <em>"oh, just look at how I did it for the last paper."</em></p>
+
+    <p>The whole thing is built around one principle: <strong>a result you can't re-derive in a single command is a result you can't trust.</strong> Everything below is in service of that.</p>
+
+    <h2>1. Raw data is sacred and read-only</h2>
+    <p>The single biggest mistake I see new students make is editing raw data files in place — cropping, renaming, "fixing" header fields. By the time you publish, you can't tell what came off the microscope and what you smoothed away on a Tuesday afternoon eight months ago.</p>
+    <p>My rule: <code>raw/</code> is mounted read-only. Always. If a transformation is needed, it lives in code that reads from <code>raw/</code> and writes to <code>derived/</code>. The transform is committed to git. The output goes to a content-addressed cache.</p>
+
+    <pre><code>project/
+├── raw/         # read-only. don't touch.
+├── derived/     # generated. throwaway.
+├── analysis/    # notebooks &amp; scripts
+├── figures/     # paper-ready plots
+└── pipelines/   # the actual transforms</code></pre>
+
+    <h2>2. One pipeline, many entry points</h2>
+    <p>I used to have a separate Snakefile, Makefile, and a folder of bash scripts that all did adjacent things. Now I have one DAG, written with <a href="https://hamilton.dagworks.io">Hamilton</a> for the in-Python parts and Snakemake for the cluster-y parts.</p>
+    <p>The win is that any cached intermediate is queryable as a node. When a reviewer asks "what if you re-ran this with σ=0.5 instead of 1.0?", the answer is one CLI flag, not a half-day of detective work.</p>
+
+    <blockquote>The graph is the documentation. If you can't draw your data flow as a DAG, you don't actually understand it yet.</blockquote>
+
+    <h2>3. Everything goes through MLflow, even the boring stuff</h2>
+    <p>Reconstruction runs, ablations, even the toy figures for talks — all of it logs to a single MLflow tracking server. Tags include the git SHA, the input dataset hash, and a free-text note. The note is the thing future-me thanks me for the most.</p>
+
+    <h2>4. Tests where it actually matters</h2>
+    <p>I don't unit-test every helper function. I do test:</p>
+    <ul>
+      <li><strong>Loaders</strong> — round-tripping a known file should yield bit-identical bytes.</li>
+      <li><strong>Geometry</strong> — coordinate transforms have analytic answers; assert against them.</li>
+      <li><strong>Conservation laws</strong> — the things physics says shouldn't change, shouldn't.</li>
+    </ul>
+
+    <h2>5. The cluster is not your laptop</h2>
+    <p>Anything longer than 30 seconds runs on Slurm. Anything that runs on Slurm runs in a Docker image with a pinned digest. Anything in that image is built from a Dockerfile in the same repo as the code. There is no "I'll just install this one thing on the login node real quick."</p>
+
+    <h2>What I'd do differently</h2>
+    <p>I started caring about reproducibility too late — somewhere around month 14 — and I paid for it during my qualifying-exam prep, when I had to rebuild a six-month-old result from memory. If you're starting a PhD next fall, do the boring infrastructure work in your first month. You will never regret it.</p>
+
+    <p style="color: var(--sub); margin-top: 48px">— Cedric</p>
+  </article>
+</main>
+
+<div id="site-footer-slot"></div>
+<script src="scripts.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Physics priors are a free lunch — Cedric Lim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<script src="chrome.js"></script>
+</head>
+<body>
+<div id="site-header-slot"></div>
+
+<main class="wrap">
+  <article class="post">
+    <a class="back-link" href="writing.html">← All writing</a>
+    <h1>Physics priors are a free lunch (when you season them right)</h1>
+    <div class="post-meta">
+      <span>January 22, 2026</span>
+      <span>·</span>
+      <span>12 min read</span>
+      <span>·</span>
+      <span>Research</span>
+    </div>
+
+    <p>There's a school of thought that says modern neural networks have so much capacity, you might as well let them learn the physics from data. Just give them more data, the argument goes, and the laws of conservation will fall out of the loss naturally. I've spent the last two years arguing the opposite, and I have the experiments to back it up.</p>
+
+    <p>The short version: if you know that mass is conserved, or that a quantity must be non-negative, or that a field must be divergence-free — <em>tell the network</em>. The right place to tell it is in the loss, not in a post-hoc projection. Done correctly, this is one of the closest things to a free lunch I've encountered in deep learning.</p>
+
+    <h2>The setup</h2>
+    <p>Most of my work is on tomographic reconstruction — given a stack of 2D projections, recover the 3D structure. It's an inverse problem, and like all inverse problems, it's <em>ill-posed</em>: many different 3D volumes are consistent with the same projections.</p>
+
+    <p>The classical answer is to add a regularizer that prefers "nice" solutions. The deep-learning answer is usually to learn a prior from data. Both work; both have failure modes. Physics priors give you a third option that composes with either.</p>
+
+    <blockquote>Conservation laws aren't constraints on the answer — they're constraints on the space of plausible answers. Encoding them shrinks the search space without throwing away anything you'd ever want to keep.</blockquote>
+
+    <h2>Three ways to enforce a prior</h2>
+    <p>Roughly, you can enforce a physical constraint at three places in the pipeline:</p>
+    <ol>
+      <li><strong>In the architecture</strong> — e.g. a softplus output to guarantee positivity.</li>
+      <li><strong>In the loss</strong> — penalize violations during training.</li>
+      <li><strong>In a post-processing step</strong> — project the prediction onto the feasible set after the fact.</li>
+    </ol>
+
+    <p>I've tried all three on the same problem. The architectural approach is the cleanest but the least flexible — it only works for trivial constraints. The post-hoc projection always works but you pay an accuracy cost, because the network never learns to produce something projectable.</p>
+
+    <p>The loss is where the magic happens.</p>
+
+    <h2>Why the loss wins</h2>
+    <p>When you penalize a constraint violation in the loss, gradient descent doesn't just learn to satisfy the constraint — it learns <em>features that make satisfying the constraint easy</em>. That's a subtle but enormous distinction. The network reorganizes its internal representations to keep conservation laws cheap.</p>
+
+    <p>In the atom-probe paper, switching from a post-hoc mass-balance projection to a soft mass-balance penalty in the loss cut our reconstruction error by ~18% at the same number of projections. No new data, no new architecture, no extra inference cost.</p>
+
+    <h2>The one case where it doesn't work</h2>
+    <p>Soft penalties have one well-known pathology: if the penalty weight is too high, you optimize for the constraint at the expense of the data fit. The network learns to be perfectly conservative and perfectly wrong.</p>
+
+    <p>The fix is unromantic: <strong>schedule the penalty weight</strong>. Start small, ramp up. We use a cosine schedule that hits its peak around 70% of training. It's not principled — it's just what works.</p>
+
+    <h2>When to reach for this</h2>
+    <p>Physics priors are most useful when:</p>
+    <ul>
+      <li>Your data is sparse, noisy, or expensive to collect.</li>
+      <li>You actually know a constraint that's exact (not just <em>usually</em> true).</li>
+      <li>Your forward model is differentiable.</li>
+    </ul>
+
+    <p>If those three things are true, encoding the prior in the loss is almost always worth a try. It's a small change to your training code and a potentially large win at inference.</p>
+
+    <p style="color: var(--sub); margin-top: 48px">— Cedric</p>
+  </article>
+</main>
+
+<div id="site-footer-slot"></div>
+<script src="scripts.js"></script>
+</body>
+</html>

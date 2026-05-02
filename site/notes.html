@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Notes — Cedric Lim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+
+<!-- Markdown -->
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<!-- Math -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<!-- Code highlighting -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" id="hljs-light" />
+<script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js"></script>
+
+<script src="chrome.js"></script>
+<style>
+  /* swap hljs theme to a dark variant when site is in dark mode */
+  [data-theme="dark"] #hljs-light { display: none; }
+</style>
+</head>
+<body>
+<div id="site-header-slot"></div>
+
+<main class="wrap">
+  <a class="back-link" href="writing.html" style="margin-top: 32px; display: inline-flex">← All writing</a>
+
+  <div class="notes-shell">
+    <!-- LEFT: section nav (built from h2/h3) -->
+    <aside class="notes-sidebar" aria-label="Document sections">
+      <div class="doc-title" id="doc-title-side">Notes</div>
+      <ol id="notes-toc"></ol>
+    </aside>
+
+    <!-- CENTER: rendered markdown -->
+    <article class="notes-content" id="notes-content">
+      <div class="notes-loading">Loading…</div>
+    </article>
+
+    <!-- RIGHT: on-this-page (subset, mirrors current section) -->
+    <aside class="notes-onthispage" aria-label="On this page">
+      <div class="label">On this page</div>
+      <div id="notes-otp"></div>
+    </aside>
+  </div>
+</main>
+
+<div id="site-footer-slot"></div>
+<script src="scripts.js"></script>
+
+<script>
+(() => {
+  // Pick the doc from ?doc=... — default to notes-c.md
+  const params = new URLSearchParams(location.search);
+  const doc = params.get("doc") || "notes-c.md";
+
+  // Configure marked + dark mode HLJS swap on theme change
+  const swapHljs = () => {
+    const dark = document.documentElement.getAttribute("data-theme") === "dark";
+    const id = "hljs-dark";
+    let darkLink = document.getElementById(id);
+    if (dark && !darkLink) {
+      darkLink = document.createElement("link");
+      darkLink.rel = "stylesheet";
+      darkLink.id = id;
+      darkLink.href = "https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css";
+      document.head.appendChild(darkLink);
+    }
+    if (darkLink) darkLink.disabled = !dark;
+  };
+  new MutationObserver(swapHljs).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
+  const slugify = (s) => s.toLowerCase().replace(/[^\w\s-]/g, "").trim().replace(/\s+/g, "-");
+
+  fetch(doc)
+    .then(r => { if (!r.ok) throw new Error("Could not load " + doc); return r.text(); })
+    .then(md => {
+      // Custom renderer: add ids to h2/h3 for anchor links
+      const renderer = new marked.Renderer();
+      renderer.heading = (text, level) => {
+        const id = slugify(text.replace(/<[^>]+>/g, ""));
+        return `<h${level} id="${id}">${text}</h${level}>`;
+      };
+      marked.setOptions({ renderer, breaks: false, gfm: true });
+
+      // Extract optional frontmatter (--- ... ---)
+      let title = doc.replace(/\.md$/, "");
+      let meta = "";
+      const fm = md.match(/^---\s*([\s\S]*?)---\s*/);
+      if (fm) {
+        md = md.slice(fm[0].length);
+        const fields = {};
+        fm[1].split("\n").forEach(line => {
+          const m = line.match(/^([\w-]+):\s*(.*)$/);
+          if (m) fields[m[1]] = m[2].trim();
+        });
+        if (fields.title) title = fields.title;
+        const bits = [];
+        if (fields.date) bits.push(fields.date);
+        if (fields.tag) bits.push(fields.tag);
+        if (fields.read) bits.push(fields.read);
+        meta = bits.length ? `<div class="doc-meta">${bits.map(b => `<span>${b}</span>`).join("<span>·</span>")}</div>` : "";
+      }
+
+      const html = marked.parse(md);
+      const content = document.getElementById("notes-content");
+      content.innerHTML = `<h1>${title}</h1>${meta}${html}`;
+      document.title = title + " — Cedric Lim";
+      document.getElementById("doc-title-side").textContent = title;
+
+      // Highlight code
+      content.querySelectorAll("pre code").forEach(b => { try { hljs.highlightElement(b); } catch(e){} });
+
+      // Render math
+      if (window.renderMathInElement) {
+        renderMathInElement(content, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+            { left: "\\(", right: "\\)", display: false },
+            { left: "\\[", right: "\\]", display: true }
+          ],
+          throwOnError: false
+        });
+      } else {
+        // KaTeX auto-render loads with `defer` — wait for it
+        document.addEventListener("DOMContentLoaded", () => {
+          if (window.renderMathInElement) {
+            renderMathInElement(content, {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false }
+              ],
+              throwOnError: false
+            });
+          }
+        });
+      }
+
+      // Build TOC from h2 (top-level) + h3 (sub) inside content
+      buildTOC(content);
+
+      // Scroll-spy
+      setupScrollSpy(content);
+
+      // Jump to hash if any
+      if (location.hash) {
+        const target = document.querySelector(location.hash);
+        if (target) setTimeout(() => target.scrollIntoView({ behavior: "instant", block: "start" }), 50);
+      }
+    })
+    .catch(err => {
+      document.getElementById("notes-content").innerHTML =
+        `<div class="notes-loading" style="color: var(--accent2)">Couldn't load <code>${doc}</code> — ${err.message}.<br><br>Try one of: <a href="?doc=notes-c.md">notes-c.md</a></div>`;
+    });
+
+  function buildTOC(content) {
+    const toc = document.getElementById("notes-toc");
+    const otp = document.getElementById("notes-otp");
+    const headings = content.querySelectorAll("h2, h3");
+    let currentL1;
+    let currentSubList;
+    headings.forEach(h => {
+      const id = h.id;
+      const text = h.textContent;
+      if (h.tagName === "H2") {
+        const li = document.createElement("li");
+        li.className = "l1";
+        const a = document.createElement("a");
+        a.href = "#" + id;
+        a.textContent = text;
+        a.dataset.target = id;
+        li.appendChild(a);
+        toc.appendChild(li);
+        currentL1 = li;
+        currentSubList = null;
+
+        // mirror in on-this-page
+        const oa = document.createElement("a");
+        oa.href = "#" + id;
+        oa.textContent = text;
+        oa.dataset.target = id;
+        otp.appendChild(oa);
+      } else if (h.tagName === "H3") {
+        if (!currentL1) return;
+        if (!currentSubList) {
+          currentSubList = document.createElement("ol");
+          currentL1.appendChild(currentSubList);
+        }
+        const li = document.createElement("li");
+        li.className = "l2";
+        const a = document.createElement("a");
+        a.href = "#" + id;
+        a.textContent = text;
+        a.dataset.target = id;
+        li.appendChild(a);
+        currentSubList.appendChild(li);
+
+        const oa = document.createElement("a");
+        oa.href = "#" + id;
+        oa.textContent = text;
+        oa.className = "h3";
+        oa.dataset.target = id;
+        otp.appendChild(oa);
+      }
+    });
+  }
+
+  function setupScrollSpy(content) {
+    const headings = [...content.querySelectorAll("h2, h3")];
+    if (!headings.length) return;
+    const sideLinks = document.querySelectorAll("#notes-toc a, #notes-otp a");
+    const setActive = (id) => {
+      sideLinks.forEach(a => a.classList.toggle("active", a.dataset.target === id));
+    };
+    const onScroll = () => {
+      const top = window.scrollY + 120;
+      let current = headings[0].id;
+      for (const h of headings) {
+        if (h.offsetTop <= top) current = h.id;
+      }
+      setActive(current);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+})();
+</script>
+</body>
+</html>

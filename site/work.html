@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Work — Cedric Lim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<script src="chrome.js"></script>
+</head>
+<body>
+<div id="site-header-slot"></div>
+
+<main class="wrap">
+  <section class="page-head">
+    <div class="eyebrow" style="margin-bottom: 16px">Projects · 2023 — 2025</div>
+    <h1>Things I've <span class="italic-accent">built &amp; researched</span>.</h1>
+    <p class="lede">A mix of research code, group-internal tools, and weekend side projects. Hover any row for a preview.</p>
+  </section>
+
+  <div class="filter-bar">
+    <button class="filter-chip active" data-filter="all">All</button>
+    <button class="filter-chip" data-filter="Research">Research</button>
+    <button class="filter-chip" data-filter="Tool">Tools</button>
+    <button class="filter-chip" data-filter="Side project">Side projects</button>
+  </div>
+
+  <section class="work-list">
+
+    <a class="work-row" id="ptn" href="#ptn" data-tag="Research" data-preview="ptn">
+      <div class="year">2025</div>
+      <div>
+        <h3>Physics-informed Tomography Networks</h3>
+        <div class="blurb">A neural reconstruction framework that bakes mass-conservation and geometric priors into the loss for sparse-view electron tomography. 5× fewer projections than analytic methods at equivalent SNR.</div>
+        <div class="stack"><span>PyTorch</span><span>JAX</span><span>CUDA</span><span>Slurm</span></div>
+      </div>
+      <div class="arrow-corner"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+    </a>
+
+    <a class="work-row" id="atomvis" href="#atomvis" data-tag="Tool" data-preview="atomvis">
+      <div class="year">2024</div>
+      <div>
+        <h3>AtomVis</h3>
+        <div class="blurb">A WebGL viewer for atom-probe datasets — handles 100M+ ions interactively in the browser with progressive LOD streaming. Used by collaborators across three groups.</div>
+        <div class="stack"><span>WebGL</span><span>React</span><span>Rust/WASM</span><span>three.js</span></div>
+      </div>
+      <div class="arrow-corner"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+    </a>
+
+    <a class="work-row" id="diffrec" href="#diffrec" data-tag="Research" data-preview="diffrec">
+      <div class="year">2024</div>
+      <div>
+        <h3>DiffRec</h3>
+        <div class="blurb">Diffusion priors for ill-posed inverse problems in 4D-STEM. Recovers strain fields from 5× fewer diffraction patterns by treating reconstruction as guided sampling.</div>
+        <div class="stack"><span>PyTorch</span><span>Diffusers</span><span>Lightning</span></div>
+      </div>
+      <div class="arrow-corner"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+    </a>
+
+    <a class="work-row" id="labnotes" href="#labnotes" data-tag="Side project" data-preview="labnotes">
+      <div class="year">2023</div>
+      <div>
+        <h3>Labnotes</h3>
+        <div class="blurb">A tiny CLI that turns markdown lab notebooks into a searchable static site. Built in a weekend; quietly used by my whole research group.</div>
+        <div class="stack"><span>Go</span><span>Lit</span><span>Pagefind</span></div>
+      </div>
+      <div class="arrow-corner"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></div>
+    </a>
+
+  </section>
+
+  <div style="height: 64px"></div>
+</main>
+
+<div id="site-footer-slot"></div>
+<script src="scripts.js"></script>
+</body>
+</html>

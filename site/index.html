@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Cedric Lim — PhD Candidate, Stanford MS&E</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="description" content="PhD candidate at Stanford working on tomography, materials science, and deep learning." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<script src="chrome.js"></script>
+</head>
+<body>
+<div id="site-header-slot"></div>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <div class="status"><span class="dot"></span> PhD Candidate · Stanford MS&E · Stanford, CA · <button class="email-link" data-email="cedric@stanford.edu" type="button">cedric@stanford.edu</button></div>
+      <h1>
+        Reconstructing the<br/>
+        invisible, one<br/>
+        <span class="italic-accent">tomogram</span> at a time.
+      </h1>
+      <p>
+        I work at the intersection of materials science, tomographic imaging, and deep learning —
+        using AI to reconstruct 3D structure from limited measurements.
+      </p>
+    </div>
+    <div class="now-card">
+      <div class="eyebrow">// Currently</div>
+      <div class="now-row"><div class="label">Research</div><div>Finishing a paper on physics-informed neural networks for atom-probe tomography.</div></div>
+      <div class="now-row"><div class="label">Reading</div><div>Deep Learning for the Sciences (Davies et al.)</div></div>
+      <div class="now-row"><div class="label">Building</div><div>An open-source pipeline for sparse-view electron tomography.</div></div>
+      <div class="now-row"><div class="label">Location</div><div>Stanford, CA — back from a research stay in Zürich.</div></div>
+    </div>
+  </section>
+
+  <!-- FEATURED WORK -->
+  <section style="padding: 32px 0 64px">
+    <div class="section-head">
+      <h2>Selected work — 2023 / 2025</h2>
+      <a href="work.html">All projects <span class="arrow">→</span></a>
+    </div>
+    <div class="project-grid">
+
+      <a class="project-card" href="work.html#ptn">
+        <div class="preview" id="preview-card-ptn"></div>
+        <div class="body">
+          <div class="meta">
+            <span class="tag">Research · 2025</span>
+            <span style="color: var(--sub)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </div>
+          <h3>Physics-informed Tomography Networks</h3>
+          <p class="blurb">A neural reconstruction framework that bakes mass-conservation and geometric priors into the loss for sparse-view electron tomography.</p>
+          <div class="stack"><span>PyTorch</span><span>JAX</span><span>CUDA</span></div>
+        </div>
+      </a>
+
+      <a class="project-card" href="work.html#atomvis">
+        <div class="preview" id="preview-card-atomvis"></div>
+        <div class="body">
+          <div class="meta">
+            <span class="tag">Tool · 2024</span>
+            <span style="color: var(--sub)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </div>
+          <h3>AtomVis</h3>
+          <p class="blurb">A WebGL viewer for atom-probe datasets — handles 100M+ ions interactively in the browser with progressive LOD.</p>
+          <div class="stack"><span>WebGL</span><span>React</span><span>Rust/WASM</span></div>
+        </div>
+      </a>
+
+      <a class="project-card" href="work.html#diffrec">
+        <div class="preview" id="preview-card-diffrec"></div>
+        <div class="body">
+          <div class="meta">
+            <span class="tag">Research · 2024</span>
+            <span style="color: var(--sub)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </div>
+          <h3>DiffRec</h3>
+          <p class="blurb">Diffusion priors for ill-posed inverse problems in 4D-STEM. Recovers strain fields from 5× fewer diffraction patterns.</p>
+          <div class="stack"><span>PyTorch</span><span>Diffusers</span></div>
+        </div>
+      </a>
+
+      <a class="project-card" href="work.html#labnotes">
+        <div class="preview" id="preview-card-labnotes"></div>
+        <div class="body">
+          <div class="meta">
+            <span class="tag">Side project · 2023</span>
+            <span style="color: var(--sub)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+          </div>
+          <h3>Labnotes</h3>
+          <p class="blurb">A tiny CLI that turns markdown lab notebooks into a searchable static site. Built in a weekend; quietly used by my whole group.</p>
+          <div class="stack"><span>Go</span><span>Lit</span></div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- WRITING + PUBS TWO-COL -->
+  <section class="two-col" style="padding: 32px 0 32px">
+    <div>
+      <div class="section-head">
+        <h2>Writing</h2>
+        <a href="writing.html">All posts <span class="arrow">→</span></a>
+      </div>
+      <a class="list-row link" href="post-phd-dataflow.html">
+        <div class="row-meta"><span>Mar 2026</span><span>8 min</span></div>
+        <div class="row-title">How I structure a PhD-scale data pipeline</div>
+        <div class="row-excerpt">Three years in, I've finally settled on a setup that survives both reviewer #2 and a 2 a.m. cluster crash.</div>
+      </a>
+      <a class="list-row link" href="post-physics-priors.html">
+        <div class="row-meta"><span>Jan 2026</span><span>12 min</span></div>
+        <div class="row-title">Physics priors are a free lunch (when you season them right)</div>
+        <div class="row-excerpt">Why baking conservation laws into the loss almost always beats post-hoc constraints — and the one case where it doesn't.</div>
+      </a>
+    </div>
+    <div>
+      <div class="section-head">
+        <h2>Publications</h2>
+        <a href="cv.html">Full CV <span class="arrow">→</span></a>
+      </div>
+      <div class="pub">
+        <div class="pub-meta"><span>Nature Computational Science</span><span class="status review">2025 · Under review</span></div>
+        <div class="pub-title">Physics-informed neural networks for sparse-view atom probe tomography reconstruction</div>
+      </div>
+      <div class="pub">
+        <div class="pub-meta"><span>npj Computational Materials</span><span class="status">2024 · Published</span></div>
+        <div class="pub-title">Diffusion priors for inverse problems in 4D scanning transmission electron microscopy</div>
+      </div>
+      <div class="pub">
+        <div class="pub-meta"><span>Microscopy &amp; Microanalysis</span><span class="status">2024 · Published</span></div>
+        <div class="pub-title">AtomVis: interactive visualization of large-scale atom probe data on the web</div>
+      </div>
+      <div class="pub">
+        <div class="pub-meta"><span>Ultramicroscopy</span><span class="status">2023 · Published</span></div>
+        <div class="pub-title">Self-supervised denoising for low-dose electron tomography</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER COLOPHON -->
+  <section style="padding: 56px 0 32px; border-top: 1px solid var(--rule); margin-top: 80px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 11px; color: var(--sub)">
+    <span>© 2026 · Built in Stanford, CA</span>
+    <span>Last updated 04.21.26</span>
+  </section>
+
+</main>
+
+<div id="site-footer-slot"></div>
+<script src="scripts.js"></script>
+<script>
+  // Inject project preview SVGs into home page cards
+  document.addEventListener("DOMContentLoaded", () => {
+    ["ptn","atomvis","diffrec","labnotes"].forEach(k => {
+      const el = document.getElementById("preview-card-" + k);
+      if (el && window.PROJECT_PREVIEWS) el.innerHTML = window.PROJECT_PREVIEWS[k];
+    });
+  });
+</script>
+</body>
+</html>
