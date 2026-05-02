@@ -13,9 +13,9 @@
 
   const SOCIALS = [
     { href: "https://github.com/cedriclim1", icon: "github", label: "GitHub" },
-    { href: "https://www.linkedin.com/in/cedriclim", icon: "linkedin", label: "LinkedIn" },
-    { href: "https://scholar.google.com/citations?user=cedriclim", icon: "scholar", label: "Google Scholar" },
-    { href: "mailto:cedric@stanford.edu", icon: "mail", label: "Email" }
+    { href: "https://www.linkedin.com/in/cedric-lim-712207208/", icon: "linkedin", label: "LinkedIn" },
+    { href: "https://scholar.google.com/citations?user=l8EMFk4AAAAJ&hl=en", icon: "scholar", label: "Google Scholar" },
+    { href: "mailto:cedlim@stanford.edu", icon: "mail", label: "Email" }
   ];
 
   const ICONS = {
