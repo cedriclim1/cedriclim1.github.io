@@ -30,7 +30,7 @@
   --serif-italic: "Instrument Serif", "Cormorant Garamond", Georgia, serif;
   --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
   --mono: "JetBrains Mono", "IBM Plex Mono", ui-monospace, "Menlo", monospace;
-  --max: 1140px;
+  --max: 1920px;
   --pad: clamp(20px, 5vw, 64px);
   --radius: 24px;
   --radius-sm: 12px;
@@ -740,7 +740,7 @@ h3 { font-size: 20px; line-height: 1.25; letter-spacing: -0.01em; }
   gap: 32px;
   padding: 40px 0 96px;
   align-items: start;
-  max-width: 1320px;
+  max-width: 2560px;
   margin-left: auto;
   margin-right: auto;
 }
